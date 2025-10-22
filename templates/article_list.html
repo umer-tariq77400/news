@@ -13,8 +13,10 @@
         {{ article.body }}
     </div>
     <div class="card-footer text-center text-muted">
+        {% if article.author.pk == request.user.pk %}
         <a href="{% url "article_update" article.id %}">Edit</a>
         <a href="{% url "article_delete" article.id %}">Delete</a>
+        {% endif %}
     </div>
 </div>
 {% endfor %}
