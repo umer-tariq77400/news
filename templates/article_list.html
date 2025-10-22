@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Articles{% endblock title %}
+
+{% block content %}
+{% for article in article_list %}
+<div class="card mt-3">
+    <div class="card-header">
+        <span class="fw-bold"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></span> &middot;
+        <span class="text-muted">by {{ article.author }} | {{ article.date|date:"F j, Y" }}</span>
+    </div>
+    <div class="card-body">
+        {{ article.body }}
+    </div>
+    <div class="card-footer text-center text-muted">
+        <a href="{% url "article_update" article.id %}">Edit</a>
+        <a href="{% url "article_delete" article.id %}">Delete</a>
+    </div>
+</div>
+{% endfor %}
+{% endblock content %}
