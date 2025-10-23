@@ -11,12 +11,18 @@
     </div>
     <div class="card-body">
         {{ article.body }}
+        {% if article.author.pk == request.user.pk %}
+            <a href="{% url "article_update" article.id %}">Edit</a>
+            <a href="{% url "article_delete" article.id %}">Delete</a>
+        {% endif %}
+        <a href="{{ article.get_absolute_url }}">New comment</a>
     </div>
     <div class="card-footer text-center text-muted">
-        {% if article.author.pk == request.user.pk %}
-        <a href="{% url "article_update" article.id %}">Edit</a>
-        <a href="{% url "article_delete" article.id %}">Delete</a>
-        {% endif %}
+        {% for comment in article.comments.all %}
+            <div class="mt-2">
+                <strong>{{ comment.author }}:</strong> {{ comment.comment }}
+            </div>
+        {% endfor %}
     </div>
 </div>
 {% endfor %}
