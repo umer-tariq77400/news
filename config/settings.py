@@ -158,4 +158,21 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
-CSRF_TRUSTED_ORIGINS = ["https://tranquil-cliffs-75210-8fc829bd8dfc.herokuapp.com"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://tranquil-cliffs-75210-8fc829bd8dfc.herokuapp.com",
+]
+
+# Security settings for production
+if not DEBUG:
+    # HTTPS/SSL settings
+    SECURE_SSL_REDIRECT = True  # Redirect all HTTP to HTTPS
+    SESSION_COOKIE_SECURE = True  # Only send session cookie over HTTPS
+    CSRF_COOKIE_SECURE = True  # Only send CSRF cookie over HTTPS
+
+    # HSTS (HTTP Strict Transport Security) settings
+    SECURE_HSTS_SECONDS = 31536000  # 1 year in seconds
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply to all subdomains
+    SECURE_HSTS_PRELOAD = True  # Allow browser preload list inclusion
+
+    # Additional recommended security settings
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")  # For Heroku
