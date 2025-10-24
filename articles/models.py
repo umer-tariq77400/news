@@ -10,6 +10,7 @@ class Article(models.Model):
         settings.AUTH_USER_MODEL,
             on_delete=models.CASCADE,
     )
+    cover_image = models.ImageField(upload_to='article_covers/', null=True, blank=True)
 
     def __str__(self):
         return self.title

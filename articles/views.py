@@ -6,9 +6,11 @@ from django.urls import reverse_lazy, reverse
 from .models import Article
 from .forms import CommentForm
 
+
 class ArticleListView(LoginRequiredMixin, ListView):
     model = Article
     template_name = "article_list.html"
+
 
 class CommentGet(DetailView):
     model = Article
@@ -18,11 +20,12 @@ class CommentGet(DetailView):
         context = super().get_context_data(**kwargs)
         context["form"] = CommentForm
         return context
-    
+
+
 class CommentPost(SingleObjectMixin, FormView):
     model = Article
     form_class = CommentForm
-    template_name = 'article_detail.html'
+    template_name = "article_detail.html"
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -34,19 +37,21 @@ class CommentPost(SingleObjectMixin, FormView):
         comment.author = self.request.user
         comment.save()
         return super().form_valid(form)
-    
+
     def get_success_url(self):
         article = self.object
         return reverse("article_detail", kwargs={"pk": article.pk})
+
 
 class ArticleDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         view = CommentGet.as_view()
         return view(request, *args, **kwargs)
-    
+
     def post(self, request, *args, **kwargs):
         view = CommentPost.as_view()
         return view(request, *args, **kwargs)
+
 
 class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Article
@@ -57,20 +62,22 @@ class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         article = self.get_object()
         return self.request.user == article.author
 
+
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
     template_name = "article_edit.html"
-    fields = ['title', 'body']
+    fields = ["title", "body", "cover_image"]
     success_url = "/articles/"
 
     def test_func(self):
         article = self.get_object()
         return self.request.user == article.author
 
+
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article_new.html"
-    fields = ["title", "body"]
+    fields = ["title", "body", "cover_image"]
 
     def form_valid(self, form):
         form.instance.author = self.request.user

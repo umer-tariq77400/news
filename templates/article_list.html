@@ -1,29 +1,34 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 
 {% block title %}Articles{% endblock title %}
 
 {% block content %}
-{% for article in article_list %}
-<div class="card mt-3">
-    <div class="card-header">
-        <span class="fw-bold"><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></span> &middot;
-        <span class="text-muted">by {{ article.author }} | {{ article.date|date:"F j, Y" }}</span>
-    </div>
-    <div class="card-body">
-        {{ article.body }}
-        {% if article.author.pk == request.user.pk %}
-            <a href="{% url "article_update" article.id %}">Edit</a>
-            <a href="{% url "article_delete" article.id %}">Delete</a>
-        {% endif %}
-        <a href="{{ article.get_absolute_url }}">New comment</a>
-    </div>
-    <div class="card-footer text-center text-muted">
-        {% for comment in article.comments.all %}
-            <div class="mt-2">
-                <strong>{{ comment.author }}:</strong> {{ comment.comment }}
+<div class="container mt-5">
+    <h1>Articles</h1>
+    <a href="{% url 'article_new' %}" class="btn btn-primary mb-3">New Article</a>
+
+    <div class="row">
+        {% for article in article_list %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if article.cover_image %}
+                    <img src="{{ article.cover_image.url }}" class="card-img-top" alt="{{ article.title }}" style="height: 200px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top bg-secondary" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                        <span class="text-white">No Image</span>
+                    </div>
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.body|truncatewords:20 }}</p>
+                    <small class="text-muted">By {{ article.author }} on {{ article.date|date:"M d, Y" }}</small>
+                </div>
+                <div class="card-footer">
+                    <a href="{% url 'article_detail' article.pk %}" class="btn btn-sm btn-info">Read More</a>
+                </div>
             </div>
+        </div>
         {% endfor %}
     </div>
 </div>
-{% endfor %}
 {% endblock content %}
