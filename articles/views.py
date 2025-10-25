@@ -7,7 +7,7 @@ from .models import Article
 from .forms import CommentForm
 
 
-class ArticleListView(LoginRequiredMixin, ListView):
+class ArticleListView(ListView):
     model = Article
     template_name = "article_list.html"
 
@@ -66,7 +66,7 @@ class ArticleDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Article
     template_name = "article_edit.html"
-    fields = ["title", "body", "cover_image"]
+    fields = ["title", "body", "category", "cover_image"]
     success_url = "/articles/"
 
     def test_func(self):
@@ -77,7 +77,7 @@ class ArticleUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 class ArticleCreateView(LoginRequiredMixin, CreateView):
     model = Article
     template_name = "article_new.html"
-    fields = ["title", "body", "cover_image"]
+    fields = ["title", "body", "category", "cover_image"]
 
     def form_valid(self, form):
         form.instance.author = self.request.user

@@ -1,18 +1,343 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
 
-{% block title %}Home{% endblock title %}
+{% block title %}Home{% endblock title %} 
 
 {% block content %}
-    {% if user.is_authenticated %}
-        <p>Hi {{ user.username }}. You are {{ user.age }} years old.</p>
-        <form action="{% url "logout" %}" method="post">{% csrf_token %}
-            <button type="submit">Log Out</button>
-        </form>
-        <br>
-        <p><a class="btn btn-primary" href="{% url "article_list" %}">View Articles</a></p>
-    {% else %}
-        <p>You are not logged in.</p>
-        <a href="{% url "login" %}">Log In</a>
-        <a href="{% url "signup" %}">Sign Up</a>
-    {% endif %}
+<main class="flex flex-1 flex-col items-center py-5">
+    <div
+        class="layout-content-container flex flex-col w-full max-w-7xl px-4 sm:px-8"
+    >
+        <!-- HeroSection -->
+        <section class="@container mt-4">
+            <div class="@[480px]:p-0">
+                <div
+                    class="flex min-h-[520px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 rounded-xl items-start justify-end px-6 pb-10 @[480px]:px-12 @[480px]:pb-12"
+                    data-alt="A person writing in a notebook with a blurred background of a library bookshelf."
+                    style="
+                        background-image: linear-gradient(
+                                rgba(0, 0, 0, 0.2) 0%,
+                                rgba(0, 0, 0, 0.6) 100%
+                            ),
+                            url('https://lh3.googleusercontent.com/aida-public/AB6AXuDW4hyv8-AUjVLkifaEsnStIRLV5AjE7OoIBVed7ROVU49V4EjiMh4poeHZquAiVMX4IEOxW2gHxcTxFUe2f9XHmfU64qI2NUaqybp9I2vh4F4MOxng7OBCu7x41i_o_68Qf1HdM-Gz9XskbMVDiysajaPZeZyWEWzXmJIo2i4sOEK3T1zYlMVrB3GxHgJW0LYMZNymbVDoR5OjP1ypOqdZ5EQLUvYInl9TjSgaQ-PsjAwY7uMGVsm8JOHd4qU4Bu7YKNv5J_DXprl_');
+                    "
+                >
+                    <div class="flex flex-col gap-4 text-left max-w-2xl">
+                        <h1
+                            class="text-white text-4xl font-black leading-tight tracking-tight font-display @[480px]:text-6xl @[480px]:font-black @[480px]:leading-tight"
+                        >
+                            Your Platform for Insightful Stories
+                        </h1>
+                        <p
+                            class="text-slate-200 text-base font-normal leading-normal @[480px]:text-lg @[480px]:font-normal @[480px]:leading-normal"
+                        >
+                            Discover, write, and share articles that matter.
+                            Join a community of passionate writers and readers
+                            today.
+                        </p>
+                    </div>
+                    <button
+                        class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 @[480px]:h-14 @[480px]:px-8 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] @[480px]:text-lg hover:opacity-90 transition-opacity"
+                    >
+                        <span class="truncate">Start Publishing</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Articles Section -->
+        <section class="mt-16">
+            <h2
+                class="text-3xl font-bold leading-tight tracking-tight font-display px-4 pb-3 pt-5"
+            >
+                Featured Articles
+            </h2>
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4"
+            >
+                <div class="flex flex-col gap-4 group cursor-pointer">
+                    <div
+                        class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden"
+                    >
+                        <div
+                            class="w-full h-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                            data-alt="Abstract image of interconnected digital nodes representing AI."
+                            style="
+                                background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB3RKPvM8zaGsgiItoAqDj0bKhHkZBPwsD7oHX-U82fFTWzGfzZsanjfpXztX1mcDwu1j_FtlasJ18ls40lPTfjWRFsv8J-85XTfdF0TJDmEH7sRHlQb62l-LCz9q41Wz3xx2Nd4w-2pE52IY0tBba-2FsWkn-tywydukdBiKNKTCldQOv3xFsSNQ-w0VRZ2uzwFmmqnHEcIchPXGAczLeiEnzCnENtYmzJhvhgCCjpQ_B7UN2zJiadDuKG9O5F_JHkAzuDy3kJZ3PN');
+                            "
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-primary uppercase">
+                            Technology
+                        </p>
+                        <p
+                            class="text-text-main dark:text-text-main-dark text-lg font-bold leading-normal mt-1 font-display group-hover:underline"
+                        >
+                            The Future of AI in Modern Journalism
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-1"
+                        >
+                            By Jane Doe
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-2"
+                        >
+                            Exploring how artificial intelligence is reshaping
+                            the landscape of news gathering, reporting, and
+                            distribution.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 group cursor-pointer">
+                    <div
+                        class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden"
+                    >
+                        <div
+                            class="w-full h-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                            data-alt="Lush green leaves with water droplets, symbolizing nature and sustainability."
+                            style="
+                                background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD2CR5RGLoX7mTsx07k2VtyQPyYAV8RKwya5V9GEsCbMnN8CvK7XjyOgXuFrdGiL1x9C1Ckb60ptsrqIGtp0yB-26okSZoPQR2PN1w9vTwyNgGNTAhtwcCTh70RxG7jzGMD6BJNU5H4TCFVEo-x0-t27E5-tlGUaY94JjOGYk2HtPXywY9O-0AIv4gbaiyN3fEed2O_-N-RHfGsjK_NKygB7xtYHRYuI2C-agLCG-XjDofHLY79vtYwEDGud8xEMnf100upWi5luemS');
+                            "
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-primary uppercase">
+                            Lifestyle
+                        </p>
+                        <p
+                            class="text-text-main dark:text-text-main-dark text-lg font-bold leading-normal mt-1 font-display group-hover:underline"
+                        >
+                            A Deep Dive into Sustainable Living Practices
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-1"
+                        >
+                            By John Smith
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-2"
+                        >
+                            Practical tips and insights on how to adopt a more
+                            eco-friendly lifestyle without compromising on
+                            quality of life.
+                        </p>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 group cursor-pointer">
+                    <div
+                        class="w-full bg-center bg-no-repeat aspect-video bg-cover rounded-lg overflow-hidden"
+                    >
+                        <div
+                            class="w-full h-full bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                            data-alt="A vintage typewriter with a blank sheet of paper, evoking creativity and writing."
+                            style="
+                                background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDUgeZOigIAIuKT7xeMJL51ysOOehDc8kiOrqZbD_eL4xgI6IxQsqzNIE4vH6bto3ghB4oFhcI5rUwe4Q9czupKFGQsMVXPuhFV0vLqtsru8BUWvGiJ1DEZ6Z9GcZPBlyd-6y-Jt_RWouDoP-PJSWkFzZMxZdylskUn5kq3wpxsrmGB3Ilc_1h-kVgkuJyQMursWqouc2Bdj-aex71Mk3TnbaVnZgbn0FMp3su6_RG6xtee7Wjt-FAWlf5RzTbIFaxPPg-d9WiqrD-5');
+                            "
+                        ></div>
+                    </div>
+                    <div>
+                        <p class="text-sm font-semibold text-primary uppercase">
+                            Creativity
+                        </p>
+                        <p
+                            class="text-text-main dark:text-text-main-dark text-lg font-bold leading-normal mt-1 font-display group-hover:underline"
+                        >
+                            Unlocking Creativity: A Guide for Writers
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-1"
+                        >
+                            By Emily White
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-2"
+                        >
+                            Techniques and exercises to overcome writer's block
+                            and tap into your boundless creative potential.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Featured Writers Section -->
+        <section class="mt-16">
+            <h2
+                class="text-3xl font-bold leading-tight tracking-tight font-display px-4 pb-3 pt-5"
+            >
+                Featured Writers
+            </h2>
+            <div
+                class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 p-4"
+            >
+                <div
+                    class="flex flex-col items-center text-center p-6 bg-slate-100/50 dark:bg-gray-800/50 rounded-lg"
+                >
+                    <img
+                        class="w-24 h-24 rounded-full object-cover"
+                        data-alt="Headshot of Sarah Chen, a professional woman in a blazer."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCQt-MvAyuYc-_Ls8bzwrQR5YTkFto8MSWKOtuj_h1xj0IW65GQ9GCY3QV8hxMhzfvPmFpExhoQS5cFIl6O4SY0hNtv5ANoHaMc9xflb4SwXECQQQxF5MzjtnrZtE7mxpmKu6IuPaa0KnEwc3Mq0WEEMimFga2D1grkWfmxtpcu4EWMzLbUJR0TYksAmkqKxatB5CMNyZJj2Z3SgalOttULklL3CwMWYc50DpNgYQkKx7z7whqdGbn-JL3eAKtua3jGfp1XWRc_hPmM"
+                    />
+                    <h3 class="text-lg font-bold font-display mt-4">
+                        Sarah Chen
+                    </h3>
+                    <p
+                        class="text-text-muted dark:text-text-muted-dark text-sm mt-1"
+                    >
+                        Expert in Tech &amp; Business Innovation
+                    </p>
+                </div>
+                <div
+                    class="flex flex-col items-center text-center p-6 bg-slate-100/50 dark:bg-gray-800/50 rounded-lg"
+                >
+                    <img
+                        class="w-24 h-24 rounded-full object-cover"
+                        data-alt="Headshot of David Rodriguez, a man with a beard looking thoughtfully into the distance."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1PwmsvLsTY11f1Q_x_atvx_AMgfLQyp-VUf0PBKU3VQSdoB_2zrZQH4BlXOLJpKrbUb1KWZaTK_xsWndUB_1z2j0Zt0frkK_Yl7SJrw62Whl3I8uH0vMRO66bu35RK-OUifl-B1iP4hd_QhWXC7XFJPCOC6rlzC7889YvOnMmkaR_VpTBL_vEfu6OgSvV-zmLCFgLpLw-1IHZDNzi6uXEyEj-QG5mOnpHb9s0Y7qQfC1LQ2QuC_qhondGJpoUfzrJxEq5SDiEeeFa"
+                    />
+                    <h3 class="text-lg font-bold font-display mt-4">
+                        David Rodriguez
+                    </h3>
+                    <p
+                        class="text-text-muted dark:text-text-muted-dark text-sm mt-1"
+                    >
+                        Traveling the world and sharing stories
+                    </p>
+                </div>
+                <div
+                    class="flex flex-col items-center text-center p-6 bg-slate-100/50 dark:bg-gray-800/50 rounded-lg"
+                >
+                    <img
+                        class="w-24 h-24 rounded-full object-cover"
+                        data-alt="Headshot of Maya Patel, a woman with curly hair smiling."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNvW_BrP-3xRwEXDMiBPmhfH8fka6fFLA7ApQwzNSLfbeMpudFna2oTJhd6E6LyTrrL8u2SaOlU4XUgv7r2UlwxL7tKQSZh9V1IQloTMR4yyFg5XUBaV2rMIfWXTJ99zhHDP2QfBHgGQVB2GsQDRvXtjORUcjPH31BHwRPfCYWhO2-Tg-coROpyXN4P0PMENG6hHfZtz61Vn6UAIobQN1NySaG-7K5Lh4lhmv5miBYiV7oO5rVvINLbsAum2ufmz52rUSBku6ezQ29"
+                    />
+                    <h3 class="text-lg font-bold font-display mt-4">
+                        Maya Patel
+                    </h3>
+                    <p
+                        class="text-text-muted dark:text-text-muted-dark text-sm mt-1"
+                    >
+                        Cultural critic and arts enthusiast
+                    </p>
+                </div>
+                <div
+                    class="flex flex-col items-center text-center p-6 bg-slate-100/50 dark:bg-gray-800/50 rounded-lg"
+                >
+                    <img
+                        class="w-24 h-24 rounded-full object-cover"
+                        data-alt="Headshot of Ben Carter, a smiling man in a collared shirt."
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJdUFoqdrje56pVVVfqrGpP2HvdKFN2yEmJhBNKOC0emhf8_PwVHpBAeqh8_UnvTOdvU670MKWixmo2js_-svj8M3HplVPbJ7SQgISVbE6TTu91qYk6BvvqKWCWCMc32Qcg2IjDLDrg5ZQTYsGZIyTOltVYfnyNSiuxSP40rScTD7flzay736xAmxIPylTm1GQ0yGPuLQ3wxHlGEvkdBUpDkbYzYLHzCsaGZu_iPcWtiWyCosQKJonu3iiqhr-J-EvmNjbHGoldCUT"
+                    />
+                    <h3 class="text-lg font-bold font-display mt-4">
+                        Ben Carter
+                    </h3>
+                    <p
+                        class="text-text-muted dark:text-text-muted-dark text-sm mt-1"
+                    >
+                        Commentary on politics and society
+                    </p>
+                </div>
+            </div>
+        </section>
+        <!-- Latest Articles Section -->
+        <section class="mt-16">
+            <h2
+                class="text-3xl font-bold leading-tight tracking-tight font-display px-4 pb-3 pt-5"
+            >
+                Latest Articles
+            </h2>
+            <div class="flex flex-col gap-8 p-4">
+                <div
+                    class="grid grid-cols-1 md:grid-cols-4 gap-6 group cursor-pointer"
+                >
+                    <div
+                        class="md:col-span-1 w-full bg-center bg-no-repeat aspect-video md:aspect-square bg-cover rounded-lg"
+                        data-alt="Global financial charts on a digital screen."
+                        style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDrkBGF_iXLih-14ztTUeA2-0XlgJ1PaiyrU1jQ6hLAKIrDewRD7NU2Yq560WVLHtGHOh2inRbAbRce_DKrbBNiGhQPcPQ2PBv5Wvtv1yC4a7FllLlGL6dADEravdRsFS1NbQgdvaIVWMAcoQOlU7QnmHkpcnVRaVwjqX_2Sn9ugpDdGuVMkxW5Sho20vrtdtISaUtHB-4qT5j8o7ElOQ9BnysQ17ytoB2BWIzarQYUEVtxk6UGKYrZIdPEMfMFEsCDF6h_21PeG6Ei');
+                        "
+                    ></div>
+                    <div class="md:col-span-3 flex flex-col justify-center">
+                        <p class="text-sm font-semibold text-primary uppercase">
+                            Economics
+                        </p>
+                        <p
+                            class="text-text-main dark:text-text-main-dark text-xl font-bold leading-normal mt-1 font-display group-hover:underline"
+                        >
+                            The Ripple Effect of Global Trade Policies
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-1"
+                        >
+                            By Mark Johnson • Oct 26, 2023
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-base font-normal leading-normal mt-3 hidden sm:block"
+                        >
+                            A detailed analysis of recent trade agreements and
+                            their potential impact on domestic and international
+                            markets.
+                        </p>
+                    </div>
+                </div>
+                <div
+                    class="grid grid-cols-1 md:grid-cols-4 gap-6 group cursor-pointer"
+                >
+                    <div
+                        class="md:col-span-1 w-full bg-center bg-no-repeat aspect-video md:aspect-square bg-cover rounded-lg"
+                        data-alt="A person meditating on a mountaintop at sunrise."
+                        style="
+                            background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC_NaeK5U_z-CFvWh05kD6bQckdivsNHD2_Av_4WmoezymABjZpuGCvLmOddLCjFIf3ZA1aKFUrBhkhjjaPzjMtBAU9zBKzn80heM7pdl-o64R5dizU_KZtg3y7nSxqAjQHCNgTjrmGZ-csYKIdaDzD1hmVV7OcZN46UGGq-qPk1pTqxIZrgLasBmgm2LROkKTv7_G9IM9dwYUC9AqczsYPlp5xjZr-05FliruLvshjV9Ajw6sg-JkQ-fVPKCAAARm0r31I2PA6l2_V');
+                        "
+                    ></div>
+                    <div class="md:col-span-3 flex flex-col justify-center">
+                        <p class="text-sm font-semibold text-primary uppercase">
+                            Health &amp; Wellness
+                        </p>
+                        <p
+                            class="text-text-main dark:text-text-main-dark text-xl font-bold leading-normal mt-1 font-display group-hover:underline"
+                        >
+                            Mindfulness in the Digital Age
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-sm font-normal leading-normal mt-1"
+                        >
+                            By Dr. Evelyn Reed • Oct 25, 2023
+                        </p>
+                        <p
+                            class="text-text-muted dark:text-text-muted-dark text-base font-normal leading-normal mt-3 hidden sm:block"
+                        >
+                            Strategies for maintaining mental clarity and focus
+                            in a world of constant digital distractions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Join Our Community CTA -->
+        <section class="mt-20">
+            <div
+                class="w-full bg-primary/10 dark:bg-primary/20 rounded-lg p-10 md:p-16 text-center"
+            >
+                <h2
+                    class="text-3xl md:text-4xl font-bold font-display tracking-tight text-text-main dark:text-text-main-dark"
+                >
+                    Join Our Community
+                </h2>
+                <p
+                    class="text-text-muted dark:text-text-muted-dark max-w-2xl mx-auto mt-4 text-lg"
+                >
+                    Become a part of our growing community of writers and
+                    readers. Share your voice, connect with others, and make
+                    your mark.
+                </p>
+                <button
+                    class="mt-8 flex mx-auto min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
+                >
+                    <span class="truncate">Sign Up for Free</span>
+                </button>
+            </div>
+        </section>
+    </div>
+</main>
 {% endblock content %}
