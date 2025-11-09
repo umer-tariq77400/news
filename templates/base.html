@@ -60,8 +60,9 @@
         <header
           class="sticky top-0 z-50 flex justify-center border-b border-solid border-border-subtle dark:border-border-subtle-dark bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm"
         >
-          <div class="flex items-center justify-between whitespace-nowrap px-4 sm:px-8 py-3 w-full max-w-7xl">
-            <div class="flex items-center gap-4 text-text-main dark:text-text-main-dark">
+          <div class="flex items-center justify-between whitespace-nowrap px-4 sm:px-8 py-3 w-full max-w-7xl gap-8">
+            <!-- Left: Logo -->
+            <div class="flex items-center gap-4 text-text-main dark:text-text-main-dark flex-shrink-0">
               <a href="{% url 'home' %}" class="flex items-center gap-4">
                 <div class="text-primary size-7">
                   <svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
@@ -80,24 +81,37 @@
                 <h2 class="text-xl font-bold leading-tight tracking-[-0.015em] font-display">NewsPlatform</h2>
               </a>
             </div>
-            <div class="flex flex-1 justify-end gap-8">
-              <div class="hidden md:flex items-center gap-9">
-                <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url 'home' %}">Homepage</a>
-                <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url 'article_list' %}"
-                  >Articles</a
-                >
-              </div>
-              <div class="flex gap-2 items-center">
+            
+            <!-- Center: Navigation Links -->
+            <div class="hidden md:flex items-center gap-9 flex-1 justify-center">
+              <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url 'home' %}">Home</a>
+              <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url 'article_list' %}">Articles</a>
+              <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="#">Contact Us</a>
+            </div>
+            
+            <!-- Right: Auth/User Actions -->
+            <div class="flex gap-4 items-center flex-shrink-0">
                 {% if user.is_authenticated %}
+                <a href="{% url 'article_new' %}" title="Create Article" class="group cursor-pointer outline-none hover:rotate-90 duration-300">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32px"
+                    height="32px"
+                    viewBox="0 0 24 24"
+                    class="stroke-primary fill-none group-hover:stroke-primary group-active:stroke-blue-200 group-active:fill-blue-600 group-active:duration-0 duration-300 opacity-75 group-hover:opacity-100 transition-opacity"
+                  >
+                    <path d="M12 22C17.5 22 22 17.5 22 12C22 6.5 17.5 2 12 2C6.5 2 2 6.5 2 12C2 17.5 6.5 22 12 22Z" stroke-width="1.5"></path>
+                    <path d="M8 12H16" stroke-width="1.5"></path>
+                    <path d="M12 16V8" stroke-width="1.5"></path>
+                  </svg>
+                </a>
                 <div class="relative" id="userDropdown">
-                  <button class="flex items-center gap-2 h-10 px-4 text-text-main dark:text-text-main-dark text-sm font-medium hover:text-primary transition-colors" onclick="toggleDropdown()">
-                    <span class="truncate">{{ user.username }}</span>
+                  <button class="flex items-center justify-center h-12 w-12 rounded-full hover:ring-2 hover:ring-primary transition-all" onclick="toggleDropdown()">
                     {% if user.profile_image %}
-                    <img class="rounded-full w-6 h-6 object-cover" src="{{ user.profile_image.url }}" alt="{{ user.username }}" />
+                    <img class="rounded-full w-12 h-12 object-cover cursor-pointer" src="{{ user.profile_image.url }}" alt="{{ user.username }}" />
                     {% else %}
-                    <span class="material-symbols-outlined text-base">account_circle</span>
+                    <span class="material-symbols-outlined text-4xl text-primary cursor-pointer">account_circle</span>
                     {% endif %}
-                    <span class="material-symbols-outlined text-base">expand_more</span>
                   </button>
                   <!-- Dropdown Menu -->
                   <div
