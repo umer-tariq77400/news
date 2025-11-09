@@ -1,7 +1,212 @@
-{% extends "base.html" %} {% block title %}Edit Profile{% endblock title %} {% block content %}
-<h2>Edit Profile</h2>
-<form method="post" enctype="multipart/form-data">
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit">Save Changes</button>
-</form>
+{% extends "base.html" %}
+
+{% block title %}Edit Profile{% endblock title %}
+
+{% block content %}
+<main class="flex flex-1 items-center justify-center px-4 py-12">
+  <div class="w-full max-w-2xl">
+    <!-- Card Container -->
+    <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-border-subtle dark:border-border-subtle-dark overflow-hidden">
+      <!-- Header -->
+      <div class="px-8 pt-8 pb-6 border-b border-border-subtle dark:border-border-subtle-dark">
+        <div class="flex items-center gap-4">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10">
+            <span class="material-symbols-outlined text-2xl text-primary">edit</span>
+          </div>
+          <div>
+            <h2 class="text-3xl font-bold text-text-main dark:text-text-main-dark font-display">Edit Profile</h2>
+            <p class="text-text-muted dark:text-text-muted-dark mt-1">Update your personal information and preferences</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Content -->
+      <div class="px-8 py-6">
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+          
+          {% if form.non_field_errors %}
+          <div class="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4">
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-red-600 dark:text-red-400">error</span>
+              <div class="text-sm text-red-800 dark:text-red-200">
+                {{ form.non_field_errors }}
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+          <!-- Profile Picture Section -->
+          {% for field in form %}
+            {% if field.name == 'profile_image' %}
+            <div class="bg-gray-50 dark:bg-gray-900/50 rounded-xl p-6 border-2 border-dashed border-border-subtle dark:border-border-subtle-dark">
+              <label class="block text-sm font-semibold text-text-main dark:text-text-main-dark mb-3">
+                {{ field.label }}
+              </label>
+              <div class="flex items-center gap-6">
+                <div class="flex-shrink-0">
+                  {% if user.profile_image %}
+                  <img src="{{ user.profile_image.url }}" alt="Current profile" class="w-20 h-20 rounded-full object-cover border-2 border-border-subtle dark:border-border-subtle-dark">
+                  {% else %}
+                  <div class="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center">
+                    <span class="material-symbols-outlined text-3xl text-primary">person</span>
+                  </div>
+                  {% endif %}
+                </div>
+                <div class="flex-1">
+                  <div class="relative">
+                    <input type="file" 
+                           name="{{ field.name }}" 
+                           id="{{ field.id_for_label }}"
+                           accept="image/*"
+                           class="block w-full text-sm text-text-main dark:text-text-main-dark
+                                  file:mr-4 file:py-2 file:px-4
+                                  file:rounded-lg file:border-0
+                                  file:text-sm file:font-semibold
+                                  file:bg-primary file:text-white
+                                  file:cursor-pointer
+                                  hover:file:bg-primary/90
+                                  file:transition-colors
+                                  cursor-pointer">
+                  </div>
+                  <p class="mt-2 text-xs text-text-muted dark:text-text-muted-dark">
+                    JPG, PNG or GIF. Max size 5MB.
+                  </p>
+                </div>
+              </div>
+              {% if field.errors %}
+                <p class="mt-2 text-sm text-red-600 dark:text-red-400">{{ field.errors.0 }}</p>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+
+          <!-- Personal Information Section -->
+          <div>
+            <h3 class="text-lg font-bold text-text-main dark:text-text-main-dark mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">badge</span>
+              Personal Information
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {% for field in form %}
+                {% if field.name == 'first_name' or field.name == 'last_name' or field.name == 'username' or field.name == 'email' %}
+                <div {% if field.name == 'username' or field.name == 'email' %}class="md:col-span-2"{% endif %}>
+                  <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-text-main dark:text-text-main-dark mb-2">
+                    {{ field.label }}
+                  </label>
+                  <input type="{% if field.name == 'email' %}email{% else %}text{% endif %}" 
+                         name="{{ field.name }}" 
+                         id="{{ field.id_for_label }}"
+                         class="w-full px-4 py-2.5 rounded-lg border-2 border-border-subtle dark:border-border-subtle-dark bg-background-light dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-text-muted dark:placeholder:text-text-muted-dark"
+                         placeholder="{{ field.label }}"
+                         {% if field.field.required %}required{% endif %}
+                         value="{{ field.value|default:'' }}">
+                  {% if field.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ field.errors.0 }}</p>
+                  {% endif %}
+                  {% if field.help_text %}
+                    <p class="mt-1 text-xs text-text-muted dark:text-text-muted-dark">{{ field.help_text }}</p>
+                  {% endif %}
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Bio Section -->
+          {% for field in form %}
+            {% if field.name == 'bio' %}
+            <div>
+              <h3 class="text-lg font-bold text-text-main dark:text-text-main-dark mb-4 flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">description</span>
+                About You
+              </h3>
+              <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-text-main dark:text-text-main-dark mb-2">
+                {{ field.label }}
+              </label>
+              <textarea name="{{ field.name }}" 
+                        id="{{ field.id_for_label }}"
+                        rows="4"
+                        class="w-full px-4 py-3 rounded-lg border-2 border-border-subtle dark:border-border-subtle-dark bg-background-light dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-text-muted dark:placeholder:text-text-muted-dark resize-none"
+                        placeholder="Tell us about yourself...">{{ field.value|default:'' }}</textarea>
+              {% if field.errors %}
+                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ field.errors.0 }}</p>
+              {% endif %}
+              {% if field.help_text %}
+                <p class="mt-1 text-xs text-text-muted dark:text-text-muted-dark">{{ field.help_text }}</p>
+              {% endif %}
+            </div>
+            {% endif %}
+          {% endfor %}
+
+          <!-- Social Links Section -->
+          <div>
+            <h3 class="text-lg font-bold text-text-main dark:text-text-main-dark mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">link</span>
+              Social Links
+            </h3>
+            <div class="space-y-4">
+              {% for field in form %}
+                {% if 'link' in field.name %}
+                <div>
+                  <label for="{{ field.id_for_label }}" class="block text-sm font-semibold text-text-main dark:text-text-main-dark mb-2">
+                    {% if 'x_link' in field.name %}
+                      <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">alternate_email</span>
+                        X (Twitter)
+                      </span>
+                    {% elif 'linkedin' in field.name %}
+                      <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">work</span>
+                        LinkedIn
+                      </span>
+                    {% elif 'github' in field.name %}
+                      <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">code</span>
+                        GitHub
+                      </span>
+                    {% elif 'website' in field.name %}
+                      <span class="flex items-center gap-2">
+                        <span class="material-symbols-outlined text-lg">language</span>
+                        Website
+                      </span>
+                    {% endif %}
+                  </label>
+                  <input type="url" 
+                         name="{{ field.name }}" 
+                         id="{{ field.id_for_label }}"
+                         class="w-full px-4 py-2.5 rounded-lg border-2 border-border-subtle dark:border-border-subtle-dark bg-background-light dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all placeholder:text-text-muted dark:placeholder:text-text-muted-dark"
+                         placeholder="https://example.com"
+                         value="{{ field.value|default:'' }}">
+                  {% if field.errors %}
+                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ field.errors.0 }}</p>
+                  {% endif %}
+                </div>
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- Hidden fields (like password) -->
+          {% for field in form %}
+            {% if field.name == 'password' %}
+              <input type="hidden" name="{{ field.name }}" value="">
+            {% endif %}
+          {% endfor %}
+
+          <!-- Action Buttons -->
+          <div class="flex items-center gap-4 pt-4 border-t border-border-subtle dark:border-border-subtle-dark">
+            <button type="submit" class="flex-1 flex items-center justify-center gap-2 py-3 px-4 bg-primary hover:bg-primary/90 text-white font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5">
+              <span>Save Changes</span>
+              <span class="material-symbols-outlined text-xl">check</span>
+            </button>
+            <a href="{% url 'profile' user.pk %}" class="flex items-center justify-center gap-2 py-3 px-4 border-2 border-border-subtle dark:border-border-subtle-dark text-text-main dark:text-text-main-dark font-semibold rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+              <span>Cancel</span>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
 {% endblock %}
