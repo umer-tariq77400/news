@@ -24,6 +24,13 @@ class ProfileView(DetailView):
 
     model = get_user_model()
     template_name = "registration/profile.html"
+    context_object_name = "profile_user"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get articles by this user
+        context["articles"] = self.object.article_set.all().order_by("-date")
+        return context
 
 
 class EditProfileView(UpdateView):
