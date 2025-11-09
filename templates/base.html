@@ -105,6 +105,14 @@
                     id="dropdownMenu"
                   >
                     <a
+                      href="{% url 'profile' user.pk %}"
+                      class="flex items-center gap-2 px-4 py-3 text-text-main dark:text-text-main-dark text-sm hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary transition-colors"
+                    >
+                      <span class="material-symbols-outlined text-base">person</span>
+                      <span>Profile</span>
+                    </a>
+                    <hr class="border-border-subtle dark:border-border-subtle-dark my-2" />
+                    <a
                       href="{% url 'password_change' %}"
                       class="flex items-center gap-2 px-4 py-3 text-text-main dark:text-text-main-dark text-sm hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary transition-colors"
                     >
