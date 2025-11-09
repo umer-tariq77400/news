@@ -1,4 +1,4 @@
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, UpdateView, DetailView
 from django.contrib.auth import get_user_model
 from .forms import CustomUserCreationForm, CustomUserChangeForm
@@ -40,8 +40,10 @@ class EditProfileView(UpdateView):
     """
 
     form_class = CustomUserChangeForm
-    success_url = reverse_lazy("profile")
     template_name = "registration/edit_profile.html"
 
     def get_object(self):
         return self.request.user
+
+    def get_success_url(self):
+        return reverse("profile", kwargs={"pk": self.request.user.pk})

@@ -1,46 +1,185 @@
-{% extends 'base.html' %}
-
-{% block title %}{{ article.title }}{% endblock title %}
-
-{% block content %}
-<div class="container mt-5">
-    {% if article.cover_image %}
-        <img src="{{ article.cover_image.url }}" class="img-fluid mb-4" alt="{{ article.title }}" style="max-height: 400px; width: 100%; object-fit: cover;">
-    {% endif %}
-    
-    <h1>{{ article.title }}</h1>
-    <p class="text-muted">By {{ article.author }} on {{ article.date|date:"F d, Y" }}</p>
-    
-    {% if user == article.author %}
-    <div class="mb-3">
-        <a href="{% url 'article_update' article.pk %}" class="btn btn-warning">Edit</a>
-        <a href="{% url 'article_delete' article.pk %}" class="btn btn-danger">Delete</a>
-    </div>
-    {% endif %}
-
-    <div class="article-body mb-5">
-        {{ article.body }}
-    </div>
-
-    <!-- Comments section -->
-    <h3>Comments</h3>
-    {% if user.is_authenticated %}
-        <form method="post" class="mb-4">
-            {% csrf_token %}
-            <textarea name="comment" class="form-control mb-2" rows="3" placeholder="Add a comment..."></textarea>
-            <button type="submit" class="btn btn-primary">Post Comment</button>
-        </form>
-    {% else %}
-        <p><a href="{% url 'login' %}">Login</a> to comment.</p>
-    {% endif %}
-
-    {% for comment in article.comments.all %}
-    <div class="card mb-2">
-        <div class="card-body">
-            <h6 class="card-subtitle">{{ comment.author }} - {{ comment.date|date:"M d, Y H:i" }}</h6>
-            <p class="card-text">{{ comment.comment }}</p>
+{% extends 'base.html' %} {% block title %}{{ article.title }}{% endblock title %} {% block content %}
+<main class="flex flex-col gap-8 px-4 sm:px-8 md:px-20 lg:px-40 py-8">
+  <div class="flex flex-col max-w-4xl mx-auto w-full">
+    <!-- Article Container -->
+    <article class="flex flex-col gap-8">
+      <!-- Cover Image -->
+      <div class="flex flex-col gap-6">
+        {% if article.cover_image %}
+        <img alt="{{ article.title }}" class="w-full h-auto max-h-[480px] object-cover rounded-xl" src="{{ article.cover_image.url }}" />
+        {% else %}
+        <div class="w-full h-[480px] bg-gradient-to-br from-primary/20 to-primary/5 rounded-xl flex items-center justify-center">
+          <span class="material-symbols-outlined text-6xl text-primary/40">image</span>
         </div>
+        {% endif %}
+
+        <!-- Article Title -->
+        <h1 class="text-4xl md:text-5xl font-bold leading-tight tracking-tight text-text-main dark:text-text-main-dark font-display">{{ article.title }}</h1>
+
+        <!-- Author Info & Share Button -->
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-border-subtle dark:border-border-subtle-dark pb-6">
+          <div class="flex items-center gap-4">
+            {% if article.author.profile_image %}
+            <img alt="{{ article.author.username }}" class="h-12 w-12 rounded-full object-cover" src="{{ article.author.profile_image.url }}" />
+            {% else %}
+            <div class="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+              <span class="material-symbols-outlined text-primary">account_circle</span>
+            </div>
+            {% endif %}
+            <div class="flex flex-col">
+              <p class="font-bold text-text-main dark:text-text-main-dark">{{ article.author.get_full_name|default:article.author.username }}</p>
+              <p class="text-sm text-text-muted dark:text-text-muted-dark">{{ article.date|date:"F d, Y" }}</p>
+            </div>
+          </div>
+          <!-- Share Button -->
+          <button
+            onclick="copyArticleLink()"
+            class="flex items-center justify-center gap-2 rounded-lg h-10 px-4 border border-border-subtle dark:border-border-subtle-dark hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors text-text-main dark:text-text-main-dark"
+            title="Copy article link to clipboard"
+          >
+            <span class="material-symbols-outlined text-xl">share</span>
+            <span class="text-sm font-medium">Share</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Article Body -->
+      <div class="prose prose-lg lg:prose-xl dark:prose-invert max-w-none font-sans text-text-main dark:text-text-main-dark">{{ article.body|linebreaks }}</div>
+    </article>
+
+    <!-- Comments Section -->
+    <div class="border-t border-border-subtle dark:border-border-subtle-dark pt-8 flex flex-col gap-8">
+      <h2 class="text-3xl font-bold text-text-main dark:text-text-main-dark font-display">Comments</h2>
+
+      <!-- Comment Form -->
+      {% if user.is_authenticated %} {% if user == article.author %}
+      <div class="rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4">
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-amber-600 dark:text-amber-400">info</span>
+          <p class="text-text-main dark:text-text-main-dark">You cannot comment on your own article.</p>
+        </div>
+      </div>
+      {% else %}
+      <div class="flex flex-col gap-4">
+        <h3 class="text-xl font-semibold text-text-main dark:text-text-main-dark">Leave a Comment</h3>
+        <form method="post" class="flex flex-col gap-4 rounded-lg bg-white dark:bg-gray-800/50 border border-border-subtle dark:border-border-subtle-dark p-4">
+          {% csrf_token %}
+          <textarea
+            name="comment"
+            class="w-full rounded-lg border border-border-subtle dark:border-border-subtle-dark bg-background-light dark:bg-gray-700 text-text-main dark:text-text-main-dark focus:ring-2 focus:ring-primary focus:border-primary placeholder:text-text-muted dark:placeholder:text-text-muted-dark p-3 resize-none"
+            placeholder="Write your comment here..."
+            rows="4"
+            required
+          ></textarea>
+          <button
+            type="submit"
+            class="flex self-end min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
+          >
+            <span class="truncate">Submit Comment</span>
+          </button>
+        </form>
+      </div>
+      {% endif %} {% else %}
+      <div class="rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 p-4">
+        <p class="text-text-main dark:text-text-main-dark"><a href="{% url 'login' %}" class="text-primary font-semibold hover:underline">Login</a> to leave a comment.</p>
+      </div>
+      {% endif %}
+
+      <!-- Comments List -->
+      <div class="flex flex-col gap-6">
+        {% if article.comments.all %} {% for comment in article.comments.all %}
+        <div class="flex gap-4 pb-6 border-b border-border-subtle dark:border-border-subtle-dark last:border-b-0 last:pb-0">
+          <!-- Comment Author Avatar -->
+          {% if comment.author.profile_image %}
+          <img alt="{{ comment.author.username }}" class="h-10 w-10 rounded-full object-cover flex-shrink-0" src="{{ comment.author.profile_image.url }}" />
+          {% else %}
+          <div class="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0">
+            <span class="material-symbols-outlined text-sm text-primary">person</span>
+          </div>
+          {% endif %}
+
+          <!-- Comment Content -->
+          <div class="flex flex-col gap-2 flex-1">
+            <div class="flex items-center gap-2">
+              <p class="font-bold text-text-main dark:text-text-main-dark">{{ comment.author.get_full_name|default:comment.author.username }}</p>
+              <span class="text-xs text-text-muted dark:text-text-muted-dark"> {{ comment.date|date:"M d, Y" }} </span>
+            </div>
+            <p class="text-text-main dark:text-text-main-dark font-sans leading-relaxed">{{ comment.comment }}</p>
+          </div>
+        </div>
+        {% endfor %} {% else %}
+        <div class="rounded-lg bg-gray-50 dark:bg-gray-800/50 border border-border-subtle dark:border-border-subtle-dark p-8 text-center">
+          <span class="material-symbols-outlined text-4xl text-text-muted dark:text-text-muted-dark mb-3 block">chat_bubble_outline</span>
+          <p class="text-text-muted dark:text-text-muted-dark">No comments yet. Be the first to share your thoughts!</p>
+        </div>
+        {% endif %}
+      </div>
     </div>
-    {% endfor %}
-</div>
+  </div>
+</main>
+
+<script>
+  function copyArticleLink() {
+    const url = window.location.href;
+
+    // Try using the modern Clipboard API first
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard
+        .writeText(url)
+        .then(() => {
+          showCopyFeedback();
+        })
+        .catch((err) => {
+          console.error("Clipboard API failed:", err);
+          fallbackCopy(url);
+        });
+    } else {
+      // Fallback for older browsers or non-secure contexts
+      fallbackCopy(url);
+    }
+  }
+
+  function fallbackCopy(text) {
+    // Create a temporary textarea element
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.style.pointerEvents = "none";
+
+    document.body.appendChild(textarea);
+
+    try {
+      textarea.select();
+      textarea.setSelectionRange(0, 99999); // For mobile devices
+      document.execCommand("copy");
+      showCopyFeedback();
+    } catch (err) {
+      console.error("Fallback copy failed:", err);
+      alert("Failed to copy link. Please try again.");
+    } finally {
+      document.body.removeChild(textarea);
+    }
+  }
+
+  function showCopyFeedback() {
+    // Find the button that was clicked
+    const button = document.querySelector('button[onclick="copyArticleLink()"]');
+    if (!button) return;
+
+    const originalHTML = button.innerHTML;
+    const originalClasses = button.className;
+
+    // Change button appearance
+    button.innerHTML = '<span class="material-symbols-outlined">check</span><span>Copied!</span>';
+    button.classList.add("bg-green-100", "dark:bg-green-900/30", "border-green-300", "dark:border-green-800");
+    button.classList.remove("hover:bg-gray-100", "dark:hover:bg-gray-800");
+
+    // Revert after 2 seconds
+    setTimeout(() => {
+      button.innerHTML = originalHTML;
+      button.className = originalClasses;
+    }, 2000);
+  }
+</script>
 {% endblock content %}

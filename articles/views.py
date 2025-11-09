@@ -13,6 +13,7 @@ class ArticleListView(ListView):
     Args:
         ListView (ListView): Django's generic ListView.
     """
+
     model = Article
     template_name = "article_list.html"
 
@@ -22,6 +23,7 @@ class ArticleDetailView(LoginRequiredMixin, View):
     Args:
         View (View): Django's generic View.
     """
+
     def get(self, request, *args, **kwargs):
         view = CommentGet.as_view()
         return view(request, *args, **kwargs)
@@ -82,6 +84,11 @@ class CommentPost(SingleObjectMixin, FormView):
         return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
+        # Prevent users from commenting on their own posts
+        if self.request.user == self.object.author:
+            form.add_error(None, "You cannot comment on your own article.")
+            return self.form_invalid(form)
+
         comment = form.save(commit=False)
         comment.article = self.object
         comment.author = self.request.user
