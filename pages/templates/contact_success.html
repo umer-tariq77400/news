@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Message Sent{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="text-center">
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">✓ Message Sent Successfully!</h4>
+            <p>Thank you for reaching out. We'll get back to you soon.</p>
+            <hr>
+            <p class="mb-0">Redirecting to home in <span id="countdown">5</span> seconds...</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let seconds = 5;
+    const interval = setInterval(() => {
+        seconds--;
+        document.getElementById('countdown').textContent = seconds;
+        if (seconds === 0) {
+            clearInterval(interval);
+            window.location.href = "{% url 'home' %}";
+        }
+    }, 1000);
+</script>
+{% endblock %}

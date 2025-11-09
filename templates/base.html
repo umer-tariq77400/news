@@ -86,7 +86,7 @@
             <div class="hidden md:flex items-center gap-9 flex-1 justify-center">
               <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url 'home' %}">Home</a>
               <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url 'article_list' %}">Articles</a>
-              <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="#">Contact Us</a>
+              <a class="text-text-main dark:text-text-main-dark text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary transition-colors" href="{% url "contact" %}">Contact Us</a>
             </div>
             
             <!-- Right: Auth/User Actions -->
@@ -209,7 +209,7 @@
                     <a class="hover:text-primary transition-colors" href="#">Guidelines</a>
                   </li>
                   <li>
-                    <a class="hover:text-primary transition-colors" href="#">Contact</a>
+                    <a class="hover:text-primary transition-colors" href="{% url "contact" %}">Contact</a>
                   </li>
                   <li>
                     <a class="hover:text-primary transition-colors" href="#">Help Center</a>

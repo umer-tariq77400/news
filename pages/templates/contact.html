@@ -1,0 +1,167 @@
+{% extends 'base.html' %} {% block title %}Contact Us{% endblock %} {% block content %}
+<main class="flex justify-center flex-1 w-full">
+  <div class="w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+    <!-- Header Section -->
+    <div class="flex flex-col items-center text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold text-text-main dark:text-text-main-dark font-display">Contact Us</h1>
+      <p class="mt-3 text-lg text-text-muted dark:text-text-muted-dark max-w-2xl">
+        We'd love to hear from you. Whether you have a question, feedback, or a news tip, our team is ready to answer all your questions.
+      </p>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
+      <!-- Contact Form Section -->
+      <div class="bg-card-light dark:bg-card-dark p-6 sm:p-8 rounded-xl border border-border-subtle dark:border-border-subtle-dark">
+        <form method="POST" class="space-y-6">
+          {% csrf_token %}
+
+          <!-- Name Field -->
+          <div>
+            <label class="block text-sm font-medium text-text-main dark:text-text-main-dark" for="{{ form.name.id_for_label }}"> Name </label>
+            <div class="mt-1">
+              {{ form.name }} {% if form.name.errors %}
+              <div class="text-red-600 text-sm mt-1">{{ form.name.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Email Field -->
+          <div>
+            <label class="block text-sm font-medium text-text-main dark:text-text-main-dark" for="{{ form.email.id_for_label }}"> Email </label>
+            <div class="mt-1">
+              {{ form.email }} {% if form.email.errors %}
+              <div class="text-red-600 text-sm mt-1">{{ form.email.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Subject Field -->
+          <div>
+            <label class="block text-sm font-medium text-text-main dark:text-text-main-dark" for="{{ form.subject.id_for_label }}"> Subject </label>
+            <div class="mt-1">
+              {{ form.subject }} {% if form.subject.errors %}
+              <div class="text-red-600 text-sm mt-1">{{ form.subject.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Message Field -->
+          <div>
+            <label class="block text-sm font-medium text-text-main dark:text-text-main-dark" for="{{ form.message.id_for_label }}"> Message </label>
+            <div class="mt-1">
+              {{ form.message }} {% if form.message.errors %}
+              <div class="text-red-600 text-sm mt-1">{{ form.message.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div>
+            <button
+              type="submit"
+              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-bold text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-colors"
+            >
+              Submit
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Contact Information Section -->
+      <div class="flex flex-col justify-center">
+        <h2 class="text-2xl font-bold text-text-main dark:text-text-main-dark font-display">Get in Touch</h2>
+        <p class="mt-3 text-text-muted dark:text-text-muted-dark">Our team is available to assist you. Here's how you can reach us.</p>
+
+        <div class="mt-8 space-y-6">
+          <!-- Email Contact -->
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined text-2xl">mail</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-text-main dark:text-text-main-dark">Email</h3>
+              <p class="mt-1 text-text-muted dark:text-text-muted-dark">Send us an email for any inquiry.</p>
+              <a class="mt-1 block text-primary font-medium hover:underline transition-colors" href="mailto:support@newsplatform.com"> support@newsplatform.com </a>
+            </div>
+          </div>
+
+          <!-- Phone Contact -->
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined text-2xl">call</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-text-main dark:text-text-main-dark">Phone</h3>
+              <p class="mt-1 text-text-muted dark:text-text-muted-dark">Our support team is available from 9am to 5pm.</p>
+              <a class="mt-1 block text-primary font-medium hover:underline transition-colors" href="tel:+1-555-123-4567"> +1 (555) 123-4567 </a>
+            </div>
+          </div>
+
+          <!-- Address Contact -->
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 flex items-center justify-center size-12 rounded-lg bg-primary/10 text-primary">
+              <span class="material-symbols-outlined text-2xl">location_on</span>
+            </div>
+            <div>
+              <h3 class="text-lg font-semibold text-text-main dark:text-text-main-dark">Office</h3>
+              <p class="mt-1 text-text-muted dark:text-text-muted-dark">Visit our headquarters.</p>
+              <p class="mt-1 text-text-main dark:text-text-main-dark font-medium">
+                123 News Avenue, Suite 100<br />
+                New York, NY 10001
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+  /* Form field styling - matching design */
+  form input[type="text"],
+  form input[type="email"],
+  form textarea {
+    display: block;
+    width: 100%;
+    border-radius: 0.5rem;
+    border: 1px solid;
+    border-color: #e0e0e0;
+    background-color: #fdfdfd;
+    color: #212121;
+    padding: 0.5rem 1rem;
+    outline: none;
+    transition: all 0.2s;
+  }
+
+  .dark form input[type="text"],
+  .dark form input[type="email"],
+  .dark form textarea {
+    border-color: #374151;
+    background-color: #111827;
+    color: #f3f4f6;
+  }
+
+  form input[type="text"]:focus,
+  form input[type="email"]:focus,
+  form textarea:focus {
+    border-color: #0d47a1;
+    box-shadow: 0 0 0 1px #0d47a1;
+  }
+
+  form textarea {
+    resize: none;
+  }
+
+  form input::placeholder,
+  form textarea::placeholder {
+    color: #6b7280;
+  }
+
+  .dark form input::placeholder,
+  .dark form textarea::placeholder {
+    color: #9ca3af;
+  }
+</style>
+{% endblock %}
