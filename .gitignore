@@ -22,13 +22,7 @@ staticfiles/
 
 # Environment files
 .env
-.env.*
-
-# IDEs / editors
-.vscode/
-.idea/
-*.sublime-project
-*.sublime-workspace
+.env
 
 # Testing / coverage
 .pytest_cache/
