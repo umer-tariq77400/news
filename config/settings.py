@@ -126,25 +126,39 @@ USE_TZ = True
 STATIC_URL = "static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# WhiteNoise compression for static files
+WHITENOISE_AUTOREFRESH = True
+WHITENOISE_USE_FINDERS = True
+
+# Storage configuration
 STORAGES = {
-    "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
-    },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
 
-MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-# Serve media files through WhiteNoise in production
-WHITENOISE_AUTOREFRESH = True
-WHITENOISE_USE_FINDERS = True
-if not DEBUG:
-    # Add media directory to WhiteNoise's search paths for production
-    # Media files uploaded at runtime will be served by WhiteNoise
-    STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "media"]
+# Development: local filesystem for media
+if DEBUG:
+    STORAGES["default"] = {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    }
+    MEDIA_URL = "media/"
+    MEDIA_ROOT = BASE_DIR / "media"
+else:
+    # Production: Azure Blob Storage for media files
+    STORAGES["default"] = {
+        "BACKEND": "storages.backends.azure_storage.AzureStorage",
+        "OPTIONS": {
+            "account_name": env.str("AZURE_STORAGE_ACCOUNT_NAME"),
+            "account_key": env.str("AZURE_STORAGE_ACCOUNT_KEY"),
+            "azure_container": env.str("AZURE_STORAGE_CONTAINER_NAME", default="media"),
+            "overwrite_files": True,
+        },
+    }
+    # Azure Blob Storage URL for media
+    MEDIA_URL = f"https://{env.str('AZURE_STORAGE_ACCOUNT_NAME')}.blob.core.windows.net/{env.str('AZURE_STORAGE_CONTAINER_NAME', default='media')}/"
+    MEDIA_ROOT = None  # Not used with Azure Storage
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
