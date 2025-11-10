@@ -54,3 +54,4 @@ yarn-error.log*
 # Misc
 celerybeat-schedule
 .mypy_cache/
+screenshots/
