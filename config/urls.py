@@ -28,5 +28,6 @@ urlpatterns = [
     path("", include("pages.urls")),
 ]
 
+# Serve media files in development; in production they're served by WhiteNoise
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
