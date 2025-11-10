@@ -142,8 +142,11 @@ MEDIA_ROOT = BASE_DIR / "media"
 WHITENOISE_AUTOREFRESH = True
 WHITENOISE_USE_FINDERS = True
 if not DEBUG:
-    # Add media directory to WhiteNoise's search paths
-    STATICFILES_DIRS = [BASE_DIR / "static", BASE_DIR / "media"]
+    # Add media directory to WhiteNoise's search paths only if it exists
+    # (it won't exist during initial Heroku deployment since .gitignore excludes it)
+    media_dir = BASE_DIR / "media"
+    if media_dir.exists():
+        STATICFILES_DIRS = [BASE_DIR / "static", media_dir]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
